@@ -111,6 +111,9 @@ export const needHideNativeTabbar = selectedTabbarStrategy === TABBAR_STRATEGY_M
 const _tabbarList = customTabbarEnable ? customTabbarList.map(item => ({ text: item.text, pagePath: item.pagePath })) : nativeTabbarList
 export const tabbarList = customTabbarEnable ? customTabbarList : nativeTabbarList
 
+// NATIVE_TABBAR(1) 时，显示原生Tabbar，在i18n的情况下需要 setTabbarItem (框架已经处理)
+export const isNativeTabbar = selectedTabbarStrategy === TABBAR_STRATEGY_MAP.NATIVE_TABBAR
+
 const _tabbar: TabBar = {
   // 只有微信小程序支持 custom。App 和 H5 不生效
   custom: selectedTabbarStrategy === TABBAR_STRATEGY_MAP.CUSTOM_TABBAR_WITH_CACHE,
