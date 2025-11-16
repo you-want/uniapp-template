@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { LOGIN_PAGE } from '@/router/config'
 import { useTokenStore } from '@/store/token'
 import { useUserStore } from '@/store/user'
 
@@ -9,41 +10,39 @@ definePage({
   },
 })
 
-const tokenStore = useTokenStore()
-const userStore = useUserStore()
+// 避免顶层调用 store，改为 computed + 函数内部调用
+const hasLogin = computed(() => useTokenStore().hasLogin)
+const userInfo = computed(() => useUserStore().userInfo)
 
 const editingNickname = ref('')
 const isEditing = ref(false)
 
 onShow(() => {
   // 展示时确保用户信息可用；如有需要可主动拉取
+  const tokenStore = useTokenStore()
+  const userStore = useUserStore()
   if (tokenStore.hasLogin && userStore.userInfo.userId === -1) {
     userStore.fetchUserInfo?.()
   }
 })
 
 async function handleLogin() {
-  try {
-    await tokenStore.login({ username: 'demo', password: '123456' })
-    await userStore.fetchUserInfo?.()
-    uni.showToast({ title: '登录成功', icon: 'success' })
-  }
-  catch (err) {
-    uni.showToast({ title: '登录失败', icon: 'none' })
-    console.log(err)
-  }
+  // 跳转到统一登录页
+  uni.navigateTo({ url: LOGIN_PAGE })
 }
 
 async function handleLogout() {
+  const tokenStore = useTokenStore()
   await tokenStore.logout()
   uni.showToast({ title: '已退出登录', icon: 'success' })
 }
 
 function startEdit() {
-  editingNickname.value = userStore.userInfo.nickname || ''
+  editingNickname.value = userInfo.value.nickname || ''
   isEditing.value = true
 }
 function saveEdit() {
+  const userStore = useUserStore()
   userStore.setUserInfo({
     ...userStore.userInfo,
     nickname: editingNickname.value,
@@ -63,6 +62,7 @@ function changeAvatar() {
         uni.showToast({ title: '选择图片失败', icon: 'none' })
         return
       }
+      const userStore = useUserStore()
       userStore.setUserAvatar(filePath)
       uni.showToast({ title: '头像已更新', icon: 'success' })
     },
@@ -76,8 +76,12 @@ function changeAvatar() {
     <!-- 顶部背景 -->
     <view class="header">
       <view class="header-content">
-        <view class="title">个人中心</view>
-        <view class="subtitle">管理个人资料与登录状态</view>
+        <view class="title">
+          个人中心
+        </view>
+        <view class="subtitle">
+          管理个人资料与登录状态
+        </view>
       </view>
     </view>
 
@@ -85,59 +89,91 @@ function changeAvatar() {
     <view class="card profile-card">
       <view class="profile">
         <image
-          :src="userStore.userInfo.avatar || '/static/images/default-avatar.png'"
+          :src="userInfo.avatar || '/static/images/default-avatar.png'"
           class="avatar"
           mode="aspectFill"
         />
         <view class="info">
           <view class="name">
-            {{ userStore.userInfo.nickname || userStore.userInfo.username || '未设置昵称' }}
+            {{ userInfo.nickname || userInfo.username || '未设置昵称' }}
           </view>
-          <view class="uid">ID: {{ userStore.userInfo.userId === -1 ? '未登录' : userStore.userInfo.userId }}</view>
+          <view class="uid">
+            ID: {{ userInfo.userId === -1 ? '未登录' : userInfo.userId }}
+          </view>
         </view>
       </view>
 
       <view class="actions">
-        <button class="btn" type="primary" @click="changeAvatar">更换头像</button>
-        <button class="btn ml-2" type="default" @click="startEdit">编辑昵称</button>
-        <button v-if="tokenStore.hasLogin" class="btn ml-2" type="warn" @click="handleLogout">退出登录</button>
-        <button v-else class="btn ml-2" type="primary" @click="handleLogin">登录</button>
+        <button class="btn" type="primary" @click="changeAvatar">
+          更换头像
+        </button>
+        <button class="btn ml-2" type="default" @click="startEdit">
+          编辑昵称
+        </button>
+        <button v-if="hasLogin" class="btn ml-2" type="warn" @click="handleLogout">
+          退出登录
+        </button>
+        <button v-else class="btn ml-2" type="primary" @click="handleLogin">
+          登录
+        </button>
       </view>
 
       <view v-if="isEditing" class="edit-row">
-        <input v-model="editingNickname" class="edit-input" placeholder="输入新昵称" />
-        <button class="btn ml-2" type="primary" size="mini" @click="saveEdit">保存</button>
+        <input v-model="editingNickname" class="edit-input" placeholder="输入新昵称">
+        <button class="btn ml-2" type="primary" size="mini" @click="saveEdit">
+          保存
+        </button>
       </view>
     </view>
 
     <!-- 快捷入口 -->
     <view class="card">
-      <view class="card-title">快捷入口</view>
+      <view class="card-title">
+        快捷入口
+      </view>
       <view class="quick-grid">
         <view class="quick-item">
-          <view class="qi-icon">📦</view>
-          <view class="qi-title">我的订单</view>
+          <view class="qi-icon">
+            📦
+          </view>
+          <view class="qi-title">
+            我的订单
+          </view>
         </view>
         <view class="quick-item">
-          <view class="qi-icon">⭐</view>
-          <view class="qi-title">我的收藏</view>
+          <view class="qi-icon">
+            ⭐
+          </view>
+          <view class="qi-title">
+            我的收藏
+          </view>
         </view>
         <view class="quick-item">
-          <view class="qi-icon">⚙️</view>
-          <view class="qi-title">设置</view>
+          <view class="qi-icon">
+            ⚙️
+          </view>
+          <view class="qi-title">
+            设置
+          </view>
         </view>
         <view class="quick-item">
-          <view class="qi-icon">❓</view>
-          <view class="qi-title">帮助中心</view>
+          <view class="qi-icon">
+            ❓
+          </view>
+          <view class="qi-title">
+            帮助中心
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 用户数据预览 -->
     <view class="card">
-      <view class="card-title">用户数据</view>
+      <view class="card-title">
+        用户数据
+      </view>
       <view class="json">
-        {{ JSON.stringify(userStore.userInfo, null, 2) }}
+        {{ JSON.stringify(userInfo, null, 2) }}
       </view>
     </view>
 

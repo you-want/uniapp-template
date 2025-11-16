@@ -11,14 +11,16 @@ definePage({
   },
 })
 
-const tokenStore = useTokenStore()
-const userStore = useUserStore()
+// 避免顶层直接调用 store，改为使用 computed 在函数内部调用
+const hasLogin = computed(() => useTokenStore().hasLogin)
+const userInfo = computed(() => useUserStore().userInfo)
 
 function goto(path: string) {
   uni.navigateTo({ url: path })
 }
 
 function gotoLogin() {
+  const tokenStore = useTokenStore()
   if (tokenStore.hasLogin) {
     uni.showToast({ title: '已登录', icon: 'none' })
     return
@@ -27,6 +29,7 @@ function gotoLogin() {
 }
 
 function logout() {
+  const tokenStore = useTokenStore()
   tokenStore.logout()
   uni.showToast({ title: '已退出登录', icon: 'success' })
 }
@@ -88,18 +91,18 @@ const features = [
       </view>
       <view class="user">
         <image
-          :src="userStore.userInfo.avatar || '/static/images/default-avatar.png'" class="avatar"
+          :src="userInfo.avatar || '/static/images/default-avatar.png'" class="avatar"
           mode="aspectFill"
         />
         <view class="info">
           <view class="line">
-            昵称：{{ userStore.userInfo.nickname || '未设置' }}
+            昵称：{{ userInfo.nickname || '未设置' }}
           </view>
           <view class="line">
-            用户名：{{ userStore.userInfo.username || '未设置' }}
+            用户名：{{ userInfo.username || '未设置' }}
           </view>
           <view class="line">
-            ID：{{ userStore.userInfo.userId === -1 ? '未登录' : userStore.userInfo.userId }}
+            ID：{{ userInfo.userId === -1 ? '未登录' : userInfo.userId }}
           </view>
         </view>
       </view>

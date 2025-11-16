@@ -52,11 +52,18 @@
   - H5：`pnpm dev` 或 `pnpm dev:h5`，访问 `http://localhost:9000/`
   - 微信小程序：`pnpm dev:mp`，使用微信开发者工具导入 `dist/dev/mp-weixin`
   - 支付宝/钉钉小程序：`pnpm dev:mp-alipay`，导入 `dist/dev/mp-alipay`
-  - App：`pnpm dev:app`，HBuilderX 导入 `dist/dev/app`（或将整个项目导入 hbx 直接运行安卓/鸿蒙）
+  - App：`pnpm dev:app`，HBuilderX 导入 `dist/dev/app`（或将整个项目导入 hbx 直接运行 ios/安卓/鸿蒙）
+
+  ![alt text](image.png)
+  ![alt text](image-1.png)
+  ![alt text](image-2.png)
+  ![alt text](image-3.png)
+  ![alt text](image-4.png)
+
 - 构建发布：
   - H5：`pnpm build:h5` 输出到 `dist/build/h5`，如非根路径，配置 `manifest.config.ts` 的 `h5.router.base`
   - 微信：`pnpm build:mp` 输出到 `dist/build/mp-weixin`，微信开发者工具上传
-  - App：`pnpm build:app` 输出到 `dist/build/app`，HBuilderX 发行（或 hbx 菜单发行安卓/鸿蒙）
+  - App：`pnpm build:app` 输出到 `dist/build/app`，HBuilderX 发行（或 hbx 菜单发行 ios/安卓/鸿蒙）
 
 ## 环境变量
 

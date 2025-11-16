@@ -54,12 +54,24 @@ export const customTabbarList: CustomTabBarItem[] = [
   },
   {
     pagePath: 'pages/me/me',
-    text: '我的',
+    text: '我的植物',
     // 1）在fg-tabbar.vue页面上引入一下并注释掉（见tabbar/index.vue代码第2行）
     // 2）配置到 unocss.config.ts 的 safelist 中
     iconType: 'unocss',
     icon: 'i-carbon-user',
     // badge: 10,
+  },
+  {
+    pagePath: 'pages/diagnose/index',
+    text: '诊断',
+    iconType: 'unocss',
+    icon: 'i-carbon-favorite',
+  },
+  {
+    pagePath: 'pages/explore/index',
+    text: '探索',
+    iconType: 'unocss',
+    icon: 'i-carbon-search',
   },
   // 其他类型演示
   // 1、uiLib

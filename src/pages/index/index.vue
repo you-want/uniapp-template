@@ -11,7 +11,7 @@ definePage({
   },
 })
 
-const themeStore = useThemeStore()
+// 避免顶层直接调用 store，改为在函数内部调用
 
 function gotoAbout() {
   uni.navigateTo({ url: '/pages-sub/about/about' })
@@ -25,7 +25,7 @@ const themeColors = ['blue', 'red', 'green', 'purple', 'orange']
 const themeIdx = ref(0)
 function cycleTheme() {
   themeIdx.value = (themeIdx.value + 1) % themeColors.length
-  themeStore.setThemeVars?.({ colorTheme: themeColors[themeIdx.value] })
+  useThemeStore().setThemeVars?.({ colorTheme: themeColors[themeIdx.value] })
 }
 
 const features = [
@@ -43,49 +43,77 @@ const features = [
     <!-- 顶部 Hero -->
     <view class="hero">
       <view class="hero-content">
-        <view class="title">uniapp-template</view>
+        <view class="title">
+          我的植物
+        </view>
         <view class="subtitle">
           集成 uniapp + Vue3 + TypeScript + Vite5 + UnoCSS 的多平台开发模板
         </view>
         <view class="actions">
-          <button type="primary" class="btn" @click="gotoAbout">示例页</button>
-          <button type="default" class="btn btn-secondary ml-2" @click="gotoMe">个人中心</button>
-          <button type="warn" class="btn ml-2" @click="cycleTheme">切换主题色</button>
+          <button type="primary" class="btn" @click="gotoAbout">
+            示例页
+          </button>
+          <button type="default" class="btn btn-secondary ml-2" @click="gotoMe">
+            个人中心
+          </button>
+          <button type="warn" class="btn ml-2" @click="cycleTheme">
+            切换主题色
+          </button>
         </view>
       </view>
     </view>
 
     <!-- 特性卡片 -->
     <view class="section">
-      <view class="section-title">内置特性</view>
+      <view class="section-title">
+        内置特性
+      </view>
       <view class="cards">
         <view v-for="f in features" :key="f.title" class="card">
-          <view class="card-icon">{{ f.icon }}</view>
-          <view class="card-title">{{ f.title }}</view>
-          <view class="card-desc">{{ f.desc }}</view>
+          <view class="card-icon">
+            {{ f.icon }}
+          </view>
+          <view class="card-title">
+            {{ f.title }}
+          </view>
+          <view class="card-desc">
+            {{ f.desc }}
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 快速入口 -->
     <view class="section">
-      <view class="section-title">快速入口</view>
+      <view class="section-title">
+        快速入口
+      </view>
       <view class="quick-links">
-        <view class="link" @click="gotoAbout">路由与拦截示例</view>
-        <view class="link" @click="gotoMe">登录与用户信息</view>
+        <view class="link" @click="gotoAbout">
+          路由与拦截示例
+        </view>
+        <view class="link" @click="gotoMe">
+          登录与用户信息
+        </view>
       </view>
       <!-- 平台差异演示（非强依赖） -->
       <!-- #ifdef H5 -->
-      <view class="notice">当前为 H5 平台，可直接打开浏览器 DevTools 进行调试。</view>
+      <view class="notice">
+        当前为 H5 平台，可直接打开浏览器 DevTools 进行调试。
+      </view>
       <!-- #endif -->
       <!-- #ifdef MP-WEIXIN -->
-      <view class="notice">当前为微信小程序平台，请通过微信开发者工具查看上传与登录逻辑。</view>
+      <view class="notice">
+        当前为微信小程序平台，请通过微信开发者工具查看上传与登录逻辑。
+      </view>
       <!-- #endif -->
     </view>
 
     <view class="footer">
       <view>模板示例页面，支持多端运行与热更新。</view>
-      <view class="muted">可在 README 中查看详细的使用说明与开发注意事项。</view>
+      <view class="muted">
+        可在 README 中查看详细的使用说明与开发注意事项。
+      </view>
     </view>
   </view>
 </template>

@@ -70,7 +70,7 @@ onMounted(() => {
   })
 })
 // #endif
-const activeColor = 'var(--wot-color-theme, #1890ff)'
+const activeColor = '#018d71'
 const inactiveColor = '#666'
 function getColorByIndex(index: number) {
   return tabbarStore.curIdx === index ? activeColor : inactiveColor
@@ -85,6 +85,20 @@ function getImageByIndex(index: number, item: CustomTabBarItem) {
 }
 
 // 注意，上面处理的是自定义tabbar，下面处理的是原生tabbar
+// 统一在组件挂载时隐藏原生 TabBar，避免出现两套 Tabbar 或旧样式
+onMounted(() => {
+  needHideNativeTabbar
+  && uni.hideTabBar({
+    fail(err) {
+      console.log('hideTabBar fail: ', err)
+    },
+    success(res) {
+      // console.log('hideTabBar success: ', res)
+    },
+  })
+})
+
+// 注意：原生 TabBar 的国际化在 setTabbarItem() 中处理
 onShow(() => {
   setTabbarItem()
 })
